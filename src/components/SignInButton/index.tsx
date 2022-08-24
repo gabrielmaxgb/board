@@ -5,6 +5,7 @@ import { FiX } from "react-icons/fi";
 import Image from 'next/image';
 
 function SignInButton() {
+  // component state careless
   const session = true;
 
   const loggedOutButton = () => {
@@ -27,11 +28,9 @@ function SignInButton() {
       className={styles.signInButton}
       onClick={() => {}}
     >
-      {/* <Image src="" alt="user-image" /> */}
       <FaUserNinja color="#FFB800" />
       Olá, Gabriel
       <FiX color="#737380" className={styles.closeIcon} />
-      {/* <FaGithub color="#FFB800" /> */}
     </button>
     );
   };
