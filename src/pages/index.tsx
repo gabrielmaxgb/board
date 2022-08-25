@@ -1,5 +1,5 @@
-import style from "../styles/styles.module.scss";
 import Head from "next/head";
+import styles from "../styles/styles.module.scss";
 
 export default function Home() {
   return (
@@ -7,9 +7,19 @@ export default function Home() {
       <Head>
         <title>Board - Organizando tarefas</title>
       </Head>
-      <div>
-        <h1 className={style.title}>next app <span>hey</span></h1>
-      </div>
+      <main className={styles.contentContainer}>
+        <img src="/images/board-user.svg" alt="board-user" />
+        <section className={styles.callToAction}>
+          <h1>Board - Organizando tarefas</h1>
+          <p>
+            <span>100% gratuito</span>
+            e online.
+          </p>
+        </section>
+        <div className={styles.donaters}>
+          <img src="https://sujeitoprogramador.com/steve.png" alt="user" />
+        </div>
+      </main>
     </>
   )
 }

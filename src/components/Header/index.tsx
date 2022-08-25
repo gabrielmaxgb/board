@@ -1,6 +1,4 @@
 import styles from "./headerStyles.module.scss";
-import Image from "next/image";
-import logoImage from "../../../images/logo.svg";
 import Link from "next/link";
 import SignInButton from "../SignInButton";
 
@@ -9,7 +7,7 @@ function Header() {
     <header className={styles.headerContainer}>
       <div className={styles.headerContent}>
         <Link href="/">
-          <Image src={logoImage} alt="logo-meu-board" />
+          <img src="/images/logo.svg" alt="" />
         </Link>
         <nav>
           <Link href="/">
@@ -19,7 +17,6 @@ function Header() {
             <a>Meu board</a>
           </Link>
         </nav>
-        {/* <button>Entrar com github</button> */}
         <SignInButton />
       </div>
     </header>

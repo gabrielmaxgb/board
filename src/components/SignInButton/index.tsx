@@ -28,7 +28,8 @@ function SignInButton() {
       className={styles.signInButton}
       onClick={() => {}}
     >
-      <FaUserNinja color="#FFB800" />
+      {/* <FaUserNinja color="#FFB800" /> */}
+      <img src="https://sujeitoprogramador.com/steve.png" alt='' />
       Olá, Gabriel
       <FiX color="#737380" className={styles.closeIcon} />
     </button>
