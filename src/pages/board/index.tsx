@@ -5,7 +5,8 @@ import SupportButton from "../../components/SupportButton";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 
-export default function Board() {
+export default function Board(props) {
+
   return (
     <>
       <Head>
@@ -68,11 +69,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     };
   }
 
-  console.log(session.user)
+  // console.log(session.user)
 
   return {
     props: {
-
     }
   };
 };
