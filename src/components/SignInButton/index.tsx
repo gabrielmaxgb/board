@@ -6,11 +6,8 @@ import { FiX } from "react-icons/fi";
 import Image from 'next/image';
 
 function SignInButton() {
-  // component state careless
-  // const session = true;
   const session = useSession();
-
-  // console.log(session.data.user.name);
+  console.log(session);
 
   const loggedOutButton = () => {
     return (
