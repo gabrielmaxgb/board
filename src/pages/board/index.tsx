@@ -12,7 +12,7 @@ function Board() {
       <main className={styles.container}>
         <form action="">
           <input type="text" placeholder="Digite sua tarefa" />
-          <button type="submit">
+          <button type="submit" onClick={(e) => {e.preventDefault()}}>
             <FiPlus size={25} color="#17181F" />
           </button>
         </form>
