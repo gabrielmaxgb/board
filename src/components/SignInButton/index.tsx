@@ -1,19 +1,23 @@
-import React from 'react'
+import { signIn, signOut, useSession } from "next-auth/react";
+
 import styles from "./signInButtonStyles.module.scss";
-import { FaGithub, FaUserNinja } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 import Image from 'next/image';
 
 function SignInButton() {
   // component state careless
-  const session = true;
+  // const session = true;
+  const session = useSession();
+
+  // console.log(session.data.user.name);
 
   const loggedOutButton = () => {
     return (
       <button
       type="button"
       className={styles.signInButton}
-      onClick={() => {}}
+      onClick={() => signIn("github")}
     >
       <FaGithub color="#FFB800" />
       Entrar com Github
@@ -26,17 +30,17 @@ function SignInButton() {
       <button
       type="button"
       className={styles.signInButton}
-      onClick={() => {}}
+      onClick={() => signOut()}
     >
       {/* <FaUserNinja color="#FFB800" /> */}
-      <img src="https://sujeitoprogramador.com/steve.png" alt='' />
-      Olá, Gabriel
+      <img src={session.data.user.image} alt='user-image' />
+      Olá, {session?.data?.user?.name}
       <FiX color="#737380" className={styles.closeIcon} />
     </button>
     );
   };
 
-  return session ? loggedButton() : loggedOutButton(); 
+  return session.data ? loggedButton() : loggedOutButton(); 
 }
 
 export default SignInButton;
