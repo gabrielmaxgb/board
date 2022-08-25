@@ -10,4 +10,34 @@ export default NextAuth({
     }),
     // ...add more providers here
   ],
+  callbacks: {
+    async session({session, token, user}) {
+        // console.log("session");
+        // console.log(session);
+        // console.log("token");
+        // console.log(token);
+      try {
+        return {
+          ...session,
+          id: token.sub,
+        };
+      } catch (error) {
+        return {
+          ...session,
+          id: null,
+        };
+      }
+    },
+    async signIn({user, account, profile, email, credentials}) {
+      const isAllowedToSignIn = true;
+      if (isAllowedToSignIn) {
+        return true
+      } else {
+        // Return false to display a default error message
+        return false
+        // Or you can return a URL to redirect to:
+        // return '/unauthorized'
+      }
+    }
+  }
 })
