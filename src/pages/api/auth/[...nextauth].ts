@@ -12,13 +12,10 @@ export default NextAuth({
   ],
   callbacks: {
     async session({session, token, user}) {
-        // console.log("session");
-        // console.log(session);
-        // console.log("token");
-        // console.log(token);
       try {
         return {
           ...session,
+          // creates an id for the session's user
           id: token.sub,
         };
       } catch (error) {

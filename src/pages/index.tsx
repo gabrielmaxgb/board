@@ -11,7 +11,7 @@ export default function Home() {
       <main className={styles.contentContainer}>
         <img src="/images/board-user.svg" alt="board-user" />
         <section className={styles.callToAction}>
-          <h1>Board - Organizando tarefas</h1>
+          <h1>Board - Organizando tarefas!</h1>
           <p>
             <span>100% gratuito</span>
             e online.

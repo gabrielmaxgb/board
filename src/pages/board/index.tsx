@@ -158,17 +158,23 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     taskListArray.push(taskData);
   }); 
   
-  // USAR ISSO AQUI PRA CORRIGIR OS BUGS ENCONTRADOS: TASKS SENDO CRIADAS SEM ID, SÓ VEM COM ID DEPOIS DE ATUALIZAR, QUANDO VÊM DIRETO DO BANCO
 
+
+  // USAR ISSO AQUI PRA CORRIGIR OS BUGS ENCONTRADOS: 
+  // TASKS SENDO CRIADAS SEM ID, SÓ VEM COM ID DEPOIS DE ATUALIZAR, QUANDO VÊM DIRETO DO BANCO
+  
+  //  ACHO QUE NAO DEVO USAR O setTaskList quando enviar uma nova tarefa pro banco por causa disso aqui de baixo
+  //
+  
   // const q = query(collection(db, "cities"), where("state", "==", "CA"));
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
     const tasks = [];
     querySnapshot.forEach((doc) => {
-        tasks.push(doc.data().task);
-        console.log("HELLO HEY")
-        console.log(doc.data());
+        tasks.push(doc.data());
+        console.log("querysnapshot")
+        console.log(querySnapshot);
     });
-    console.log("Current user tasks: ", typeof tasks);
+    console.log("Current user tasks: ", tasks);
   });
 
 
