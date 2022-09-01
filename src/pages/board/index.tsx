@@ -53,7 +53,7 @@ export default function Board(props: IBoardProps) {
           };
           tasksList.push(task);
       });
-      console.log("Current user tasks: ", tasksList);
+      // console.log("Current user tasks: ", tasksList);
       setTaskList(tasksList);
     });
 
