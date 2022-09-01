@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 
-import { getFirestore, addDoc, collection, getDocs, query, where, doc, onSnapshot } from 'firebase/firestore';
+import { getFirestore, addDoc, collection, getDocs, query, where, doc, onSnapshot, deleteDoc } from 'firebase/firestore';
 
 import Head from "next/head";
 import styles from "./boardStyles.module.scss";
@@ -83,8 +83,9 @@ export default function Board(props: IBoardProps) {
     }
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    alert(`delete ${taskId}`)
+  const handleDeleteTask = async (taskId: string) => {
+    alert("Aperte ok para confirmar!");
+    await deleteDoc(doc(db, "tasks", `${taskId}`));
   };
 
   const renderTasks = () => {
@@ -130,9 +131,7 @@ export default function Board(props: IBoardProps) {
             <FiPlus size={25} color="#17181F" />
           </button>
         </form>
-
         <h1>Você tem {taskList.length} {taskList.length === 1 ? "tarefa" : "tarefas"}!</h1>
-        
         <section>
           {renderTasks()}
         </section>
