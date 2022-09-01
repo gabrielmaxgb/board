@@ -7,7 +7,7 @@ import Head from "next/head";
 import styles from "./boardStyles.module.scss";
 import { FiPlus, FiCalendar, FiEdit2, FiTrash, FiClock } from "react-icons/fi";
 import SupportButton from "../../components/SupportButton";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import firebaseConnection from "../../services/firebaseConnection";
 import { format } from "date-fns";
 
@@ -31,12 +31,33 @@ interface IBoardProps {
 const db = getFirestore(firebaseConnection);
 
 export default function Board(props: IBoardProps) {
-  const { user, taskListArray } = props;
+  console.log("board props");
+  console.log(props);
+  const { user } = props;
   const [input, setInput] = useState('');
   // const inputRef = useRef(null);
-  const [taskList, setTaskList] = useState<TtaskList[]>(JSON.parse(taskListArray));
+  const [taskList, setTaskList] = useState<TtaskList[]>([]);
 
+  console.log("taskList")
   console.log(taskList)
+
+  useEffect(() => {
+    const q = query(collection(db, "tasks"), where("userId", "==", user.id));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tasksList = [];
+      querySnapshot.forEach((doc) => {
+          const task = {
+            id: doc.id,
+            ...doc.data(),
+          };
+          tasksList.push(task);
+      });
+      console.log("Current user tasks: ", tasksList);
+      setTaskList(tasksList);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const handleAddTask = async (e: FormEvent) => {
     e.preventDefault();
@@ -55,7 +76,6 @@ export default function Board(props: IBoardProps) {
 
     try {
       const docRef = await addDoc(collection(db, "tasks"), newTask);
-      setTaskList([...taskList, newTask]);
       setInput('');
       console.log("Document written with ID", docRef.id);
     } catch (error) {
@@ -65,6 +85,32 @@ export default function Board(props: IBoardProps) {
 
   const handleDeleteTask = (taskId: string) => {
     alert(`delete ${taskId}`)
+  };
+
+  const renderTasks = () => {
+    return taskList.map((task, index) => {
+      return (
+        <article key={index} className={styles.taskList}>
+          <p>{task.task}</p>
+          <div className={styles.actions}>
+            <div>
+              <FiCalendar size={20} color="#FFB800" />
+              <time>{task.createdFormated}</time>
+              <button>
+                <FiEdit2 size={20} color="#FFFFFF" />
+                <span>Editar</span>
+              </button>
+            </div>
+            <button onClick={() => handleDeleteTask(task?.id)}>
+              <span>
+                <FiTrash size={20} color="#FE3636" />
+                Excluir
+              </span>
+            </button>
+          </div>
+        </article>
+      );
+    })
   };
 
   return (
@@ -88,31 +134,7 @@ export default function Board(props: IBoardProps) {
         <h1>Você tem {taskList.length} {taskList.length === 1 ? "tarefa" : "tarefas"}!</h1>
         
         <section>
-          {
-            taskList.map((task, index) => {
-              return (
-                <article key={index} className={styles.taskList}>
-                  <p>{task.task}</p>
-                  <div className={styles.actions}>
-                    <div>
-                      <FiCalendar size={20} color="#FFB800" />
-                      <time>{task.createdFormated}</time>
-                      <button>
-                        <FiEdit2 size={20} color="#FFFFFF" />
-                        <span>Editar</span>
-                      </button>
-                    </div>
-                    <button onClick={() => handleDeleteTask(task?.id)}>
-                      <span>
-                        <FiTrash size={20} color="#FE3636" />
-                        Excluir
-                      </span>
-                    </button>
-                  </div>
-                </article>
-              );
-            })
-          }
+          {renderTasks()}
         </section>
       </main>
       <div className={styles.vipContainer}>
@@ -157,31 +179,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     };
     taskListArray.push(taskData);
   }); 
-  
-
-
-  // USAR ISSO AQUI PRA CORRIGIR OS BUGS ENCONTRADOS: 
-  // TASKS SENDO CRIADAS SEM ID, SÓ VEM COM ID DEPOIS DE ATUALIZAR, QUANDO VÊM DIRETO DO BANCO
-  
-  //  ACHO QUE NAO DEVO USAR O setTaskList quando enviar uma nova tarefa pro banco por causa disso aqui de baixo
-  //
-  
-  // const q = query(collection(db, "cities"), where("state", "==", "CA"));
-  const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    const tasks = [];
-    querySnapshot.forEach((doc) => {
-        tasks.push(doc.data());
-        console.log("querysnapshot")
-        console.log(querySnapshot);
-    });
-    console.log("Current user tasks: ", tasks);
-  });
-
 
   return {
     props: {
       user,
-      taskListArray: JSON.stringify(taskListArray),
+      // taskListArray: JSON.stringify(taskListArray),
     }
   };
 };
