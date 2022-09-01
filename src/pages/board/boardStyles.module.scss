@@ -5,6 +5,28 @@
   background-color: #17181F;
   border-radius: 6px;
 
+  .warnText {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+    color:#FFB800;
+    font-size: 1.1rem;
+    margin-left: 1rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+
+      color: #ff3636;
+      font-size: 1.1rem;
+      margin-left: 60px;
+      background: transparent;
+      border: 0;
+    }
+  }
+
   form {
     display: flex;
     justify-content: center;

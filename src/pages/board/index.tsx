@@ -1,11 +1,11 @@
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
-
-import { getFirestore, addDoc, collection, getDocs, query, where, doc, onSnapshot, deleteDoc } from 'firebase/firestore';
-
 import Head from "next/head";
+
+import { getFirestore, addDoc, collection, getDocs, query, where, doc, onSnapshot, deleteDoc, updateDoc } from 'firebase/firestore';
+
 import styles from "./boardStyles.module.scss";
-import { FiPlus, FiCalendar, FiEdit2, FiTrash, FiClock } from "react-icons/fi";
+import { FiPlus, FiCalendar, FiEdit2, FiTrash, FiClock, FiX } from "react-icons/fi";
 import SupportButton from "../../components/SupportButton";
 import { FormEvent, useEffect, useState } from "react";
 import firebaseConnection from "../../services/firebaseConnection";
@@ -37,6 +37,7 @@ export default function Board(props: IBoardProps) {
   const [input, setInput] = useState('');
   // const inputRef = useRef(null);
   const [taskList, setTaskList] = useState<TtaskList[]>([]);
+  const [editingTask, setEditingTask] = useState<TtaskList | null>(null);
 
   console.log("taskList")
   console.log(taskList)
@@ -74,6 +75,15 @@ export default function Board(props: IBoardProps) {
       return;
     }
 
+    if (editingTask) {
+      await updateDoc(doc(db, "tasks", editingTask.id), {
+        task: input,
+      })
+      setInput('');
+      setEditingTask(null);
+      return;
+    };
+
     try {
       const docRef = await addDoc(collection(db, "tasks"), newTask);
       setInput('');
@@ -88,6 +98,17 @@ export default function Board(props: IBoardProps) {
     await deleteDoc(doc(db, "tasks", `${taskId}`));
   };
 
+  const handleEditTask = (task: TtaskList) => {
+    console.log(task);
+    setEditingTask(task);
+    setInput(task.task);
+  };
+
+  const handleCancelEditing = () => {
+    setInput('');
+    setEditingTask(null);
+  };
+
   const renderTasks = () => {
     return taskList.map((task, index) => {
       return (
@@ -97,7 +118,7 @@ export default function Board(props: IBoardProps) {
             <div>
               <FiCalendar size={20} color="#FFB800" />
               <time>{task.createdFormated}</time>
-              <button>
+              <button onClick={() => handleEditTask(task)}>
                 <FiEdit2 size={20} color="#FFFFFF" />
                 <span>Editar</span>
               </button>
@@ -120,6 +141,15 @@ export default function Board(props: IBoardProps) {
         <title>Minhas tarefas | Board</title>
       </Head>
       <main className={styles.container}>
+        {editingTask && (
+          <span className={styles.warnText}>
+            Editando tarefa:
+            <button onClick={() => handleCancelEditing()}>
+              Cancelar edição
+              <FiX size={30} color="#FF3636" />
+            </button>
+          </span>
+        )}
         <form action="" onSubmit={(e) => handleAddTask(e)}>
           <input 
             type="text" 
