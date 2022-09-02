@@ -10,6 +10,7 @@ import SupportButton from "../../components/SupportButton";
 import { FormEvent, useEffect, useState } from "react";
 import firebaseConnection from "../../services/firebaseConnection";
 import { format } from "date-fns";
+import Link from "next/link";
 
 type TtaskList = {
   id?: string,
@@ -113,7 +114,9 @@ export default function Board(props: IBoardProps) {
     return taskList.map((task, index) => {
       return (
         <article key={index} className={styles.taskList}>
-          <p>{task.task}</p>
+          <Link href={`board/${task.id}`}>
+            <p>{task.task}</p>
+          </Link>
           <div className={styles.actions}>
             <div>
               <FiCalendar size={20} color="#FFB800" />
